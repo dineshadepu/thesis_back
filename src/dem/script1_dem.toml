@@ -1,0 +1,30 @@
+# Data for the first DEM simulation.
+# this data is used to run the script1.py file
+
+title = "script1 dem data file"
+
+radius = 1.0e-3
+density = 7850.0
+# youngs modulus
+E = 200.1e9
+# shear modulus
+G = 77.1e9
+# poisson ratio
+nu = 0.3
+# dynamic friction ratio
+mu = 0.3
+# dynamic friction ratio
+shear_viscosity = 1.0e-6
+impact_velocity = 1.0
+initial_rotational_velocity = 0.0
+# this has to be calculated if velocity is changed
+normal_stiffness = 6.5e6
+tangential_stiffness = 5.0e6
+tangential_to_normal_stiffness_ratio = 0.824
+en = 0.5
+bulk_viscosity = 0.022
+
+
+# time step and final time
+tf = 1.0
+dt = 1e-4

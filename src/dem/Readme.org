@@ -1,0 +1,9 @@
+* Discrete element method
+  This folder is for the scripts of DEM doc created using [[~/Dropbox/PhD/doc/dem/dem.org][this file]].  This
+  sub folder has all the scripts needed for results of DEM.
+
+** Script1. Dimentionless normal force vs dimentionless overlap with different cor
+   This is the first benchmark of DEM. This benchmark is taken from the book.
+   It can be found in figure 2.5 of the book.
+
+   It can be found at [[~/Dropbox/PhD/src/dem/script1_dem.py][this location]].
