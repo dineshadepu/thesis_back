@@ -25,27 +25,16 @@ def calculate_normals(x, y):
         if i is (len(x) - 1):
             dx = (x[0] - x[i-1])
             dy = (y[0] - y[i-1])
-            if dx != 0:
-                y_dash = (y[0] - y[i-1]) / (x[0] - x[i-1])
         else:
             dx = (x[i+1] - x[i-1])
             dy = (y[i+1] - y[i-1])
-            if dx != 0:
-                y_dash = (y[i+1] - y[i-1]) / (x[i+1] - x[i-1])
-
-        if dx == 0:
-            normal = [dy, 0]
-        else:
-            mod_y_dash = np.sqrt(y_dash**2 + 1)
-            normal = [-y_dash / mod_y_dash, 1 / mod_y_dash]
-
+        magn = np.sqrt(dx**2+dy**2)
+        normal = [dy/magn, -dx/magn]
         normals[i] = normal
-    normal_u = normals[:, 0]
-    normal_v = normals[:, 1]
-    print(normal_u)
 
-    plt.quiver(x, y, normal_u, normal_v)
-    plt.show()
+    # plt.quiver(x, y, normals[:, 0], normals[:, 1])
+    # plt.show()
+    return normals
 
 
 x, y = create_circle()
