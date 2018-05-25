@@ -44,7 +44,7 @@ rather than flowing out completely particles gets jammed.
 \end{subfigure}
 
 \caption{Unexpected behaviour of a system with discrete particles}
-\label{fig:image2}
+\label{fig:dem_introduction}
 \end{figure}
 
 In 1979 \citeauthor{Cundall_1979} introduced DEM to model such system. They
@@ -68,65 +68,56 @@ is a particle with definite mass we can compute the dynamics of such particle
 using the Newton's 2nd law.
 
 
-\begin{eqnarray}
+\begin{gather}
   \label{eq:dem:equations_of_motion}
-  m_i \, \dv{\vec{x}_i}{t} &=& \vec{f}_i\\
-  J_i \, \dv{\vec{\dot{\omega}}_i}{t} &=& \vec{M}_i\\
-  \vec{f}_i &=& \vec{g} + \sum_i^N \vec{f}_{ij}^c + \vec{f}_{ext}\\
-  \vec{M}_i &=& \vec{M}^r + \vec{M}^c
-\end{eqnarray}
+  m_i \, \dv{\vec{x}_i}{t} = \vec{f}_i\\
+  J_i \, \dv{\vec{\dot{\omega}}_i}{t} = \vec{M}_i\\
+  \vec{f}_i = m_i \,\vec{g} + \sum_i^N \vec{f}_{ij}^c + \vec{f}_{ext}\\
+  \vec{M}_i = \vec{M}^r + \vec{M}^c
+\end{gather}
 where $\vec{f}_i$ and $\vec{M}_i$ are the force and moment acting on particle
-$i$. Further these forces are decomposed into gravity ($\vec{g}$), contact force
-due to other particle $j$ ($\vec{f}_{ij}$ force on i due to j) and any other external
-force ($\vec{f}_{ext}$).
+$i$. Further these forces are decomposed into gravity ($m_i \, \vec{g}$),
+contact force due to other particle $j$ ($\vec{f}_{ij}$ force on i due to j) and
+any other external force ($\vec{f}_{ext}$).
 
 A visual representation of these forces is given in figure
+~\ref{fig:basic_forces_dem}.
 
 \begin{figure}[htb]
   \centering
   \begin{tikzpicture}
-    % \draw[help lines] (0, 0) grid (2, 2);
-    \draw[line width=1pt] (0, 0) circle[radius=1.5];
+    \draw[line width=1pt] (0, 0) circle[radius=1];
     \draw[fill] (0,0) circle[radius=1pt];
-    \node[left] at (0, 0) {$i$};
-    \draw[line width=1pt] (2.5, 0) circle[radius=1.5];
-    \draw[fill] (2.5,0) circle[radius=1pt];
-    \node[right] at (2.5, 0) {$j$};
-
-    \draw [->] (2.5, 0)--(0,0);
+    \node[left] at (0, 0) {$1$};
+    \draw[line width=1pt] (1, -2) circle[radius=1];
+    \draw[fill] (1, -2) circle[radius=1pt];
+    \node[left] at (1, -2) {$2$};
+    \draw[line width=1pt] (3, 0.5) circle[radius=1];
+    \draw[fill] (3, 0.5) circle[radius=1pt];
+    \node[left] at (3, 0.5) {$3$};
+    \draw[line width=1pt] (3.7, 2.2) circle[radius=1];
+    \draw[fill] (3.7, 2.2) circle[radius=1pt];
+    \node[left] at (3.7, 2.2) {$4$};
   \end{tikzpicture}
   \caption{TikZ}
-  \label{fig:}
+  \label{fig:basic_forces_dem}
 \end{figure}
 
+The contact force ($f_c$) acts at the contact point of the two spheres. This
+force is computed using various contact force models, such as linear spring
+dashpot model (LSD) or a nonlinear model, Hertz model.
 
-
-
-
-
-
-To model the dynamics of discrete particles which interact only at their surface
-we use discrete element method (DEM).
-
-Newton's second law is used to describe the motion of particle.
-
-
-% Write the foce alws and describe the forces acting on each particle
 
 \section{Contact force modelling}
 \label{sec:cont-force-modell}
-We illustrate the contact force $\{vec{f}_c$ in equation
-\ref{eq:dem:equations_of_motion} by considering two spheres $i, j$ coming
-towards each other as in figure \ref{fig:dem:two_spheres_collinding}.
 
-\begin{figure}
-  \centering
-  \label{fig:dem:two_spheres_collinding}
-  \caption{Two spheres colliding}
-\end{figure}
+In the previous section we saw interaction of spheres and forces acting on each
+sphere. To make our life simple let's consider two spheres to model the contact
+force ($f_c$).
 
-\section{Oblique impact of two spheres}
-\label{sec:oblique-impact-two}
+
+
+
 
 
 
