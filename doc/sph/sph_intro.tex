@@ -1,0 +1,288 @@
+\chapter{Fluid simulation using Smoothed Particle Hydrodynamics}
+\label{cha:fluid-simul-using}
+
+Mass conservation equation for a fluid particle can be written as
+
+\begin{equation}
+  \label{eq:continuity}
+  \frac{D\rho}{Dt} = - \rho \; \nabla \cdot \vec{u}
+\end{equation}
+
+
+
+Momentum conservation equation for a fluid particle can be written as
+
+\begin{equation}
+  \label{eq:momentum}
+  \frac{D\vec{u}}{Dt} = - \frac{\nabla p}{\rho} + \nu
+  \nabla^2{\vec{u}} + \vec{g}
+\end{equation}
+
+
+
+Any function can be approximated by using its neighbouring points by Delta
+function. Which later can be extended to a kernel function W.
+
+
+
+\begin{equation}
+  \label{eq:f_app}
+  A(x_i) = \sum_i \frac{m_j}{\rho_j} A(x_j) W_{ij}
+\end{equation}
+
+
+Approximation of divergence of a function is necessary to approximate
+continuity equation eqref:eq:continuity.  One simple way of approximating would
+be directly by using the function approximation, and extending it to divergence.
+
+\begin{equation*}
+  \nabla \cdot \vec{A}(x_i) = \sum_i \frac{m_j}{\rho_j}
+  \vec{A}(x_j) \cdot \nabla_i W_{ij}
+\end{equation*}
+
+A better approximation would be done by using density from \textit{First golden rule
+of SPH} \cite{monaghan-1992-smoot-partic-hydrod}.  From basic vector identity we
+have
+
+\begin{equation*}
+  \nabla\cdot(f \vec{u}) = \vec{u} \cdot
+  \nabla{f} + f \; \nabla \cdot \vec{u}
+\end{equation*}
+
+From which the divergence of a vector is computed as
+
+\begin{equation*}
+  \nabla \cdot \vec{u} = \frac{1}{f} \Big[\nabla\cdot(f
+  \vec{u}) - \vec{u} \cdot \nabla{f} \Big]
+\end{equation*}
+
+In our case $f$ is $\rho$, and $u$ is velocity.  With particle
+approximation,
+
+\begin{equation*}
+  \nabla \cdot \vec{u}_i = \frac{1}{\rho_i}
+  \Big[\nabla\cdot(f_i \vec{u}_i) - \vec{u}_i \cdot \nabla{\rho}_i
+  \Big]
+\end{equation*}
+
+Applying SPH approximation would be
+
+\begin{equation*}
+  \nabla \cdot \vec{u}_i = \frac{1}{\rho_i} \Big[
+  \sum_j \frac{m_j}{\rho_j} \rho_j \vec{u}_j \cdot \nabla_i W_{ij} - \sum_j
+  \frac{m_j}{\rho_j} \rho_j \vec{u}_i \cdot \nabla_i W_{ij} \Big]
+\end{equation*}
+
+Which gives us divergence approximation in terms of density
+
+\begin{equation}
+  \label{eq:divergence_sph}
+  \nabla \cdot \vec{u}_i = \frac{1}{\rho_i}
+  \Big[ \sum_j {m_j} (\vec{u}_j - \vec{u}_i) \cdot \nabla_i W_{ij}
+  \Big]
+\end{equation}
+
+
+Since in momentum equation ref:eq:momentum we have pressure force as gradient
+of pressure, we need to derive SPH approximation of such gradient. From naive
+approximation we have,
+
+
+\begin{equation}
+  \label{eq:df_app}
+   \nabla A(x_i) = \sum_i \frac{m_j}{\rho_j} A(x_j) \nabla_i W_{ij}
+\end{equation}
+
+
+A better approximation would be done by using density from \textit{First golden rule
+of SPH} \cite{monaghan-1992-smoot-partic-hydrod}.  From basic vector identities we
+have
+
+\begin{align*}
+  \nabla \bigg( \frac{f}{g} \bigg) &= f\; \nabla \bigg(\frac{1}{g} \bigg) + \frac{1}{g} \nabla f \\
+  \frac{1}{g} \nabla f &= \nabla \bigg( \frac{f}{g} \bigg) - f\; \nabla \bigg( \frac{1}{g} \bigg) \\
+  \frac{1}{g} \nabla f &= \nabla \bigg( \frac{f}{g} \bigg) + \frac{f}{g^2} \; \nabla g
+\end{align*}
+
+in our case $f$ is pressure (p) and $g$ is density ($\rho$), and
+approximating it for a particle,
+
+
+\begin{equation*}
+  \frac{1}{\rho_i} \nabla p_i = \nabla \big(\frac{p_i}{\rho_i} \big) + \frac{p_i}{\rho_i^2} \; \nabla \rho
+\end{equation*}
+
+Approximating it using SPH, we have
+
+\begin{equation*}
+  \frac{1}{\rho_i} \nabla p_i = \sum_j \frac{m_j}{\rho_j} \;
+  \frac{p_j}{\rho_j} \nabla_i W_{ij} + \frac{p_i}{\rho_i^2} \; \sum_j
+  \frac{m_j}{\rho_j} \; \rho_j \nabla_i W_{ij}
+\end{equation*}
+
+Which gives us gradient of $p$ in terms of density as
+
+
+\begin{equation}
+  \label{eq:df_sph}% \frac{1}{\rho_i} \nabla p_i = \sum_j m_j \bigg(
+  \frac{p_i}{\rho_i^2} + \frac{p_j}{\rho_j^2} \bigg)\;\nabla_i W_{ij}
+\end{equation}
+
+
+One of ways to solve for incompressible fluids in SPH is using PCISPH. In
+PCISPH, if the density at the next time step in more compressible than the
+prescribed percent, the the pressure at the current time is adjusted to nullify
+it to the prescribed limit.
+
+The density is computed using summation density.
+
+\begin{equation}
+  \label{eq:summation_density}
+  \rho_i(t) = \sum_j m_j W(\vec{x}_i(t) - \vec{x}_j(t))
+\end{equation}
+
+Now, density at time $t + 1$ in terms of summation density can be written as,
+and assuming equal mass(m) for each particle,
+\begin{align*}
+  \rho_i(t+1) &= m \sum_j W(\vec{x}_i(t+1) -
+                \vec{x}_j(t+1)) \\
+              &= m \sum_j W(\vec{x}_i(t) + \Delta
+                \vec{x}_i(t) - \vec{x}_j(t) - \Delta \vec{x}_j(t)) \\
+              &= m \sum_j W(\vec{d}_{ij}(t) + \Delta \vec{d}_{ij}(t))
+\end{align*}
+
+Where $\vec{d}_{ij}$ is $\vec{x}_i(t) - \vec{x}_j(t)$ and
+$\Delta \vec{d}_{ij}$ is $\Delta\vec{x}_i(t) -
+\Delta\vec{x}_j(t)$
+
+
+Applying Taylor series approximation to kernel, we have
+
+\begin{align*}
+  \rho_i(t+1) &= m \sum_j W(\vec{d}_{ij}(t)) + m \sum_j \nabla_i W(\vec{d}_{ij}(t)) \cdot \Delta \vec{d}_{ij}(t) \\
+              &= m \sum_j W(\vec{x}_i(t) - \vec{x}_j(t)) + m \sum_j \nabla_i W(\vec{x}_i(t) -
+                \vec{x}_j(t)) \cdot (\Delta\vec{x}_i(t) - \Delta\vec{x}_j(t))\\
+\end{align*}
+
+The first term on the right hand side is the density at time $t$ and the
+second term is the change at time $t$.
+
+\begin{equation*}
+  \rho_i(t+1) = \rho_i(t) + \Delta \rho_i(t)
+\end{equation*}
+
+The change in density can be written as
+
+\begin{equation}
+  \label{eq:density_difference}
+  \Delta \rho_i(t) = m \big(\Delta\vec{x}_i(t) \cdot \sum_j \nabla_i W_{ij} - \sum_j \nabla_i W_{ij} \cdot \Delta\vec{x}_j(t) \big)
+\end{equation}
+
+From the integrator scheme (Leap-Frog) we can estimate the change in position
+of $x_i$ as
+
+
+\begin{equation*}
+  \label{eq:Delta_x_i}
+  \Delta \vec{x}_i = \Delta t^2
+  \frac{\vec{F}_i^p}{m}
+\end{equation*}
+
+Since pressure force per unit mass is given by
+
+
+\begin{equation*} \frac{\vec{F}_i^p}{m} = - \frac{\nabla p_i}{\rho_i}
+\end{equation*}
+
+the right hand side can be written in terms of particle approximation of
+gradient \ref{eq:df_sph} as
+
+\begin{equation*}
+  \frac{\vec{F}_i^p}{m} = - \sum_j m_j \bigg(
+  \frac{p_i}{\rho_i^2} + \frac{p_j}{\rho_j^2} \bigg)\;\nabla_i W_{ij}
+\end{equation*}
+
+by assuming equal mass for every particle, this can be reformulated as
+
+\begin{equation*}
+  \frac{\vec{F}_i^p}{m} = - m \sum_j \bigg(
+  \frac{p_i}{\rho_i^2} + \frac{p_j}{\rho_j^2} \bigg)\;\nabla_i W_{ij}
+\end{equation*}
+
+Which can be substituted in \ref{rq:Delta_x_i}, and can be solved for change in
+position of $x_i$
+
+\begin{equation*}
+  \Delta \vec{x}_i = - \Delta t^2 \; m \; \sum_j \bigg(
+  \frac{p_i}{\rho_i^2} + \frac{p_j}{\rho_j^2} \bigg)\;\nabla_i W_{ij}
+\end{equation*}
+
+Further assuming the pressure of neighbourhood particles same as particle i,
+and density for all the particles to be same i.e., $\rho_0$ we have
+
+\begin{equation*}
+  \Delta \vec{x}_i = - \Delta t^2 \; m \; \frac{2 \;
+    \widetilde{p}_i}{\rho_0^2} \sum_j \nabla_i W_{ij}
+\end{equation*}
+
+Force acting on particle $i$ due to particle $j$ can be written as
+
+\begin{equation*}
+  \vec{F}_j^p = m^2 \bigg( \frac{p_i}{\rho_0^2} +
+  \frac{p_j}{\rho_0^2} \bigg)\;\nabla_i W_{ij}
+\end{equation*}
+
+Note that the sign is reversed as there will be equal and opposite forces on
+both the particles and the gradient is still evaluated with respect to particle
+$i$. Due to such force, the change in position of particle at $j$ is given by
+
+\begin{equation*}
+  \Delta \vec{x}_j = \Delta t^2 \; m \; \frac{2 \;
+    \widetilde{p}_i}{\rho_0^2} \nabla_i W_{ij}
+\end{equation*}
+
+Now substitute particle $i$ and $j$ position change in density difference
+equation \ref{eq:density_difference}, we have,
+
+\begin{align*}
+  \Delta \rho_i(t) &= m \bigg( - \Delta t^2 \; m \; \frac{2 \;
+                                  \widetilde{p}_i}{\rho_0^2} \sum_j \nabla_i W_{ij} \cdot \sum_j \nabla_i W_{ij} -
+                                  \sum_j \nabla_i W_{ij} \cdot \Delta t^2 \; m \; \frac{2 \;
+                     \widetilde{p}_i}{\rho_0^2} \nabla_i W_{ij}\bigg)\\
+                   &= m^2 \Delta t^2 \; \frac{2 \; \widetilde{p}_i}{\rho_0^2} \bigg(-
+                     \sum_j \nabla_i W_{ij} \cdot \sum_j \nabla_i W_{ij} - \sum_j \nabla_i W_{ij} \cdot \nabla_i W_{ij} \bigg)
+\end{align*}
+
+Upon solving for pressure $\widetilde{p}$, we get
+
+\begin{align*}
+  \widetilde{p}_i &= \frac{\Delta \rho_i(t)}{\beta \; \bigg(-
+                                 \sum_j \nabla_i W_{ij} \cdot \sum_j \nabla_i W_{ij} - \sum_j \nabla_i W_{ij}
+                                 \cdot \nabla_i W_{ij} \bigg)}
+\end{align*}
+
+Where $\beta=\frac{2\,m^2 \Delta t^2}{\rho_0^2}$. To produce a density change
+of $\Delta \rho$ we need pressure $\widetilde{p}_i$ as in above equation. But to
+nullify a density change of $\rho_{err_i} = \rho_i^* - \rho_0$ we need pressure
+$\widetilde{p}_i$ as
+
+\begin{align*}
+  \widetilde{p}_i &= \frac{-\rho_{err_i}}{\beta \; \bigg(- \sum_j
+                    \nabla_i W_{ij} \cdot \sum_j \nabla_i W_{ij} - \sum_j \nabla_i W_{ij} \cdot
+                    \nabla_i W_{ij} \bigg)}\\
+  \widetilde{p}_i &= \delta \; \rho_{err_i}
+\end{align*}
+
+where $\delta$ is given by
+
+\begin{equation}
+  \label{eq:pcisph_delta}
+  \delta = \frac{-1}{\beta \; \bigg(- \sum_j \nabla_i
+    W_{ij} \cdot \sum_j \nabla_i W_{ij} - \sum_j \nabla_i W_{ij} \cdot \nabla_i
+    W_{ij} \bigg)}
+\end{equation}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "../mainrep"
+%%% End:
