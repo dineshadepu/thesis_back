@@ -267,13 +267,14 @@ where $\vec{t}$ is the direction of $\frac{\vec{f}_{t0}}{\norm{\vec{f}_{t0}}}$.
 
 DEM can be applied to rigid body simulation to evaluate the forces between rigid
 bodies in collision. The modelling process starts by discretizing the rigid
-bodies into particles (Fig~\ref{fig:rigid_body_particles}).
-\footnote{Taken from Nvidia}
-\begin{figure}[ht]
-  \label{fig:rigid_body_particles}
+bodies into particles (Fig~\ref{fig:rigid_body_particles} \footnote{Taken from Nvidia}).
+
+
+\begin{figure}
   \centering
   \includegraphics[width=0.9\linewidth, height=5cm]{dem/doc_images/grid_to_particles}
   \caption{Rigid body discretized as particles}
+  \label{fig:rigid_body_particles}
 \end{figure}
 
 
@@ -311,11 +312,70 @@ fracture of body. It follows bonding the particles with its neighbours using
 springs (Fig~\ref{fig:bonded_dem}).
 
 
-\begin{figure}
+\begin{figure}[htb]
   \centering
+  \begin{tikzpicture}
+    % ---------------------------------------------
+    \draw[line width=1pt] (0, 0) circle[radius=1];
+    \draw[line width=1pt] (2, 0) circle[radius=1];
+    \draw[line width=1pt] (1, 1.75) circle[radius=1];
+    \draw[line width=1pt] (3, 1.75) circle[radius=1];
+    \draw[line width=1pt] (-1, 1.75) circle[radius=1];
+    \draw[line width=1pt] (0, 3.5) circle[radius=1];
+    \draw[line width=1pt] (2, 3.5) circle[radius=1];
+    \draw[line width=1pt, color=red] (1, 0.75) rectangle(3, 2.75);
+    \draw[line width=1pt, color=red] (1, 0.75) -- (3, 2.75);
+    \draw[line width=1pt, color=red] (3, 0.75) -- (1, 2.75);
+  \end{tikzpicture}
   \caption{Particles bonded to neighbours}
   \label{fig:bonded_dem}
 \end{figure}
+
+As a first step in simulating an elastic body using bonded DEM is to discretize
+the body into particles having finite radius and mass, connected to its
+neighbours with relaxed springs in tangential and normal directions. The
+dynamics of the body is investigated in terms of each particle rather than
+looking at the full body collectively. The forces on each particle due to its
+neighbours are governed by Hertz model. The forces from external sources other
+than the particles of the body are can also be easily integrated into the forces
+of the particle using Hertz law.
+
+
+The accuracy of the results depend on the efficiency of the packing of solid.  A
+coordination number around six will give approximation and the structure will be
+stable. To get a optimum packing one needs to follow specific packing mechanisms
+rather than using a structured grid.
+
+
+\section{Coupling Bonded DEM with SPH}
+\label{sec:coupling-bonded-dem}
+
+
+\citeauthor{wu-2016-coupl-sph} coupled SPH with bonded DEM to simulated
+deformation of elastic structures under fluid flow. Till now, we modelled fluid
+using SPH, rigid and elastic solids by DEM and bonded DEM\,. The interaction of
+a fluid particle with solid can be modelled using boundary-fluid pressure force.
+
+Force between any two particles can be directly derived from SPH principles
+as
+\begin{equation}
+  F^p_{i \leftarrow j} = -m_{i} m_{j} \frac{p_{i}}{\rho^2_{i}}
+\end{equation}
+From this, force exerted by a fluid particle on a solid particle is can be
+derived as
+\begin{equation}
+  F^p_{f_i \leftarrow b_j} = -m_{f_i} \psi_{b_j}(\rho o_{i}) \frac{p_{f_i}}{\rho^2_{f_i}}
+\end{equation}
+Where $\psi_{b_j}(\rho o_{i}) $ is $\rho_o \, V_{b_j}$. While computing the
+force between the fluid and solid particle, solid particle is assigned with
+volume. In the force equation rather than using the mass of the solid particle
+we should use the volume of the solid and the density of the fluid. An equal and
+opposite force is applied by boundary particle on the fluid
+
+\begin{equation}
+  F^p_{b_i \leftarrow f_j} = -F^p_{f_i \leftarrow b_j}
+\end{equation}
+
 
 %%
 
