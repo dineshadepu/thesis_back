@@ -2,8 +2,43 @@
 
 
 \chapter{Introduction}
+Physically based animations have got a quite attention these days. By simulating
+the situations close to real life could be very useful in replacing the hand
+drawn animations in movies. For an example, the hair simulation is too much work
+while a character is running. This could be replaced with the physical
+simulation done on fast computers. Similarly interests are flag simulation, can
+crushing, blood flow and many more.
 
+Among these, one interesting phenomena is rigid bodies colliding in a fluid
+flow.  This modelling can be very much useful in simulating collision of ships
+in an ocean.  This problem has two phases, fluid and solid. Where each phases is
+interacting with other two phases. For describing the fluids numerically one can
+choose Eulerian or a Lagrangian model. Either description has advantages and
+disadvantages. Eulerian method the data is taken from a fixed points, where as
+in Lagrangian approach, the fluid is discretized into particles, and the data
+extracted from those particles as they move. Some of the major advantages of
+Eulerian (grid based) schemes is a quick solution of incompressibility can be
+found, parallelization is easy. But modelling breaking waves, droplet formation
+requires it to use very high resolution grid. Free surface flows modelling is
+computationally intensive in grid based schemes. Where as Lagrangian based
+schemes are able to capture such tiny details effectively, with less
+computational cost. However there are few drawbacks in Lagrangian based schemes.
+To overcome disadvantages from Lagrangian scheme, semi-Lagrangian schemes have
+proposed.
 
+Smoothed particle hydrodynamics (SPH), a numerical tool of Lagrangian type is
+used in the present work to simulate the fluid flow. In SPH it is
+computationally expensive to solve for a pressure Poisson equation. In stead the
+fluid is assumed to be weakly compressible and the change in density is to
+pressure is related with a state equation. For very less density fluctuations,
+the speed of sound in the fluid has to be chosen to be very high, which results
+in a very small time steps.
+
+To model interaction between the solid bodies Discrete Element Method (DEM) is
+used. Given rigid body is discretized into small particles, whose relative
+positions don¡¯t change with time, and the interaction force with other rigid
+bodies is evaluated using DEM\,. Finally the interaction between the fluid and
+solid is evaluated using the pressure from fluid on solid in SPH form.
 
 %%
 
