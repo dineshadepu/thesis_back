@@ -1,9 +1,18 @@
 %============================= abs.tex================================
 \begin{Abstract}
-This document contains essential templates required to write technical
-reports using \LaTeX.  Particularly it shows how to create an
-equation, figure, table, symbols list, and bibliographic citation in a \LaTeX\
-document.
+Rigid body simulation in fluid flows has been gaining interest. In particular rigid
+bodies in free surface flows has been a keen interest these days. Many proposals
+have made in order to model such phenomena. Among which Smoothed Particle
+Hydrodynamics (SPH) has man advantages in modelling the free surface when com-
+pared to grid based method. Coupling the fluid with solid body is also seamlessly
+done using SPH and Discrete Element Method (DEM) as only the acceleration from
+solid particle is need to be added.
+Since solving pressure Poisson equation to evaluate pressure is expensive,
+weakly compressible scheme is adapted.
+In the present work fluid flow equations are numerically implemented using
+SPH and rigid bodies using DEM. Coupling of these two phases is done using the
+two numerical tools DEM and SPH. To evaluate force on solid body due to fluid,
+solid body is also discetized to fluid particles and the coupling is considered.
 %
 %
 %
@@ -11,4 +20,3 @@ document.
 %
 \end{Abstract}
 %=======================================================================
-

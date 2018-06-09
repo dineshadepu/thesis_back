@@ -34,12 +34,14 @@ rather than flowing out completely particles gets jammed.
 \begin{figure}[h]
   \begin{subfigure}{0.5\textwidth}
     \includegraphics[width=0.9\linewidth, height=5cm]{dem/doc_images/hourglass}
-    \caption{Sand exhibiting different behaviour in an hourglass}
+    \caption{Sand exhibiting different behaviour in an hourglass (Reproduced from \href{https://www.istockphoto.com/in/videos/hourglass?sort=mostpopular&offlinecontent=include&phrase=hourglass}{istockphoto})}
     \label{fig:hourglass}
   \end{subfigure}
   \begin{subfigure}{0.5\textwidth}
     \includegraphics[width=0.9\linewidth, height=5cm]{dem/doc_images/hopper_jam}
-    \caption{Particles jammed in a hopper}
+    \caption{Particles jammed in a hopper. (Reproduced from
+      \href{http://webhome.phy.duke.edu/~jt41/research.html}{Junyao Tang's Home
+    Page})}
     \label{fig:hopper_jam}
   \end{subfigure}
 
@@ -61,7 +63,7 @@ which govern the simulation are discussed.
 
 \section{Discrete Element Method}
 
-It is a numerical method introduced by Cundall and Strack \citep{CS79}
+It is a numerical method introduced by \cite{Cundall_1979},
 used to model the behavior of large number of particles having finite
 mass and radius which interact at their surfaces. The governing
 equation of motion for such a particle can be written using Newton's
@@ -458,7 +460,8 @@ bodies into particles (Fig~\ref{fig:rigid_body_particles} \footnote{Taken from N
 \begin{figure}
   \centering
   \includegraphics[width=0.9\linewidth, height=5cm]{dem/doc_images/grid_to_particles}
-  \caption{Rigid body discretized as particles}
+  \caption{Rigid body discretized as particles. (Reproduced from
+    \href{https://developer.nvidia.com/gpugems/GPUGems3/gpugems3_ch29.html}{nvidia})}
   \label{fig:rigid_body_particles}
 \end{figure}
 
